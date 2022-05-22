@@ -80,7 +80,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'library.wsgi.application'
-
+CORS_ALLOWED_ORIGINS=[
+    "https://stxnextlib.herokuapp.com/"
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
