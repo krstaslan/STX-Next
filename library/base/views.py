@@ -7,21 +7,26 @@ import requests,json
 from .booksave import BookSave
 from django.http import HttpResponse
 from django.db.models import Q
-
+from django.db.models.functions import Cast
+from django.db.models import IntegerField, CharField
 @api_view(['GET','POST'])
 def book_list(request):
     if request.method =="GET":
-        #for url filter
         try:
-            author=request.GET.get('author') if request.GET.get('author') != None else ''
+               
+            auth=str(request.GET.get('author')) 
+            author=auth[1:-1]
             acquir=request.GET.get('acquired') if request.GET.get('acquired') != None else ''
-            fromdate=int(request.GET.get('from')) if request.GET.get('from') != None else ''
+            fromdate=int(request.GET.get('from')) 
             to=int(request.GET.get('to')) if request.GET.get('to') != None else ''
-            book=Book.objects.filter(
-                Q(authors__icontains=author) ,
-                Q(published_year__gte=fromdate) ,
-                Q(published_year__lt=to) ,
-                Q(acquired__icontains=acquir)       
+            print(acquir)
+            book=Book.objects.annotate(
+                published_year_integer=Cast('published_year', output_field=IntegerField()),
+                authors_as_string=Cast('authors', output_field=CharField(max_length=200))).filter(
+                Q(acquired__icontains=acquir),
+                Q(published_year_integer__lte=to),
+                Q(published_year_integer__gte=fromdate),
+                Q(authors__icontains= author)
                 )
             serializer = BookSerializer(book , many=True)
             return Response(serializer.data)
