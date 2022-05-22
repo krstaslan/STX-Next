@@ -1,23 +1,18 @@
-from django.views.generic import ListView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status,generics
+from rest_framework import status
 from .models import Book,Import
 from .serializers import ImportSerializer, BookSerializer,DataSerializer
-import requests
-from django.shortcuts import render
-import json
+import requests,json
 from .booksave import BookSave
-from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
-from django.http import JsonResponse
-from .filters import BookFilter
 from django.db.models import Q
+
 @api_view(['GET','POST'])
 def book_list(request):
     if request.method =="GET":
+        #for url filter
         try:
-                #in aline if statement. will chech if it first time to open page
             author=request.GET.get('author') if request.GET.get('author') != None else ''
             acquir=request.GET.get('acquired') if request.GET.get('acquired') != None else ''
             fromdate=int(request.GET.get('from')) if request.GET.get('from') != None else ''
@@ -79,7 +74,6 @@ def import_author(request):
         if serializer.is_valid():
             auth=request.POST.get("authors")
             try:
-                
                 response = requests.get(url="https://www.googleapis.com/books/v1/volumes?q=inauthor={auth}")
             except:
                 response.raise_for_status()
@@ -92,11 +86,7 @@ def import_author(request):
             if serializer.is_valid():
                 return Response(serializer.data)
 def info(request):
-    my_json = json.dumps({
-"info": {
-"version": "2022.05.16"
-}
-})
+    my_json = json.dumps({"info": {"version": "2022.05.16"}})
     return HttpResponse(my_json)
 
 

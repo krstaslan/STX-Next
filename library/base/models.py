@@ -16,7 +16,6 @@ class Book(models.Model):
     
 class Import(models.Model):
     authors = models.CharField(max_length=200) 
-    #published_year=models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.authors
 
@@ -24,12 +23,3 @@ class Data(models.Model):
     imported=models.IntegerField(default=0,null=True)
     def __str__(self):
         return self.imported
-
-# class Date(models.Model):
-#     version=models.DateTimeField(auto_now=True)
-#     def __str__(self):
-#         return self.version
-# class Info(models.Model):
-#     info=models.ForeignKey(Data, on_delete=models.CASCADE)
-#     def __str__(self):
-#         return self.info
