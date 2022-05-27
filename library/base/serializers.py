@@ -1,5 +1,6 @@
 
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import Book,Import,Data
 
 class BookSerializer(ModelSerializer):
@@ -12,8 +13,6 @@ class ImportSerializer(ModelSerializer):
         model= Import
         fields=['authors']
 
-class DataSerializer(ModelSerializer):
-    class Meta:
-        model= Data
-        fields=['imported']
+class DataSerializer(serializers.ModelSerializer):
+    imported= serializers.IntegerField()
 
